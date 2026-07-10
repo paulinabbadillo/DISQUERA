@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solicitud de datos para contrato — RICO O MUERTX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F3EC;
+    --surface:#FFFFFF;
+    --ink:#21252B;
+    --ink-soft:#777E8C;
+    --line:#DCD4C2;
+    --rule: rgba(33,37,43,.05);
+    --accent:#D98E2B;
+    --accent-soft:#F4E1BD;
+    --teal:#33524F;
+    --error:#B5482F;
+    --success:#3F6B4F;
+    --font-mono:'IBM Plex Mono', monospace;
+    --font-sans:'IBM Plex Sans', sans-serif;
+    --max-width: 760px;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+
+  body{
+    background-color:var(--bg);
+    background-image: repeating-linear-gradient(
+      to bottom, transparent, transparent 31px, var(--rule) 31px, var(--rule) 32px
+    );
+    color:var(--ink);
+    font-family:var(--font-sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{ color:var(--teal); }
+
+  .page{
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+  }
+
+  .cover{
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:2rem 1.75rem;
+    margin-bottom:2.5rem;
+  }
+
+  .cover__brand{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    margin-bottom:1.75rem;
+    padding-bottom:1.5rem;
+    border-bottom:1px solid var(--line);
+  }
+
+  .cover__logo{
+    width:48px;
+    height:48px;
+    flex-shrink:0;
+  }
+
+  .cover__logo img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+  }
+
+  .cover__name{
+    font-family:var(--font-mono);
+    font-size:.85rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  .cover__meta h1{
+    font-size:1.5rem;
+    font-weight:700;
+    margin:0 0 .6rem;
+  }
+
+  .cover__meta p{
+    margin:0 0 1.25rem;
+    color:var(--ink-soft);
+    font-size:.95rem;
+    max-width:46ch;
+  }
+
+  .cover__folio{
+    display:inline-flex;
+    align-items:center;
+    gap:.6rem;
+    background:var(--accent-soft);
+    border:1px solid var(--accent);
+    padding:.5rem .9rem;
+    font-family:var(--font-mono);
+  }
+
+  .cover__folio-label{
+    font-size:.7rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  .cover__folio-value{
+    font-size:.95rem;
+    font-weight:600;
+    letter-spacing:.05em;
+  }
+
+  .form-section{
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:2.25rem 1.75rem 1.75rem;
+    margin-bottom:3rem;
+    position:relative;
+  }
+
+  .form-section__tab{
+    position:absolute;
+    top:-15px;
+    left:28px;
+    background:var(--accent);
+    color:var(--ink);
+    font-family:var(--font-mono);
+    font-size:.7rem;
+    font-weight:600;
+    letter-spacing:.1em;
+    padding:.4rem .8rem;
+    transform: rotate(-1.5deg);
+    box-shadow: 2px 3px 0 rgba(33,37,43,.12);
+    white-space:nowrap;
+  }
+
+  .form-section h2{
+    font-size:1.05rem;
+    font-weight:700;
+    margin:.75rem 0 .25rem;
+  }
+
+  .form-section > .section-hint{
+    color:var(--ink-soft);
+    font-size:.85rem;
+    margin:0 0 1.75rem;
+  }
+
+  .grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0 1.5rem;
+  }
+
+  .grid-3{
+    display:grid;
+    grid-template-columns:1.4fr 1.4fr 1fr;
+    gap:0 1.5rem;
+  }
+
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:.4rem;
+    margin-bottom:1.4rem;
+    min-width:0;
+  }
+
+  .field--full{ grid-column:1 / -1; }
+
+  label{
+    font-family:var(--font-mono);
+    font-size:.7rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+
+  label .req{ color:var(--accent); }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="date"],
+  select,
+  textarea{
+    font-family:var(--font-sans);
+    font-size:.95rem;
+    color:var(--ink);
+    background:transparent;
+    border:none;
+    border-bottom:2px solid var(--line);
+    padding:.5rem .1rem;
+    border-radius:0;
+    width:100%;
+    transition:border-color .15s ease;
+  }
+
+  textarea{ resize:vertical; min-height:4.5rem; line-height:1.5; }
+
+  input:focus, select:focus, textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible{
+    outline:2px solid var(--teal);
+    outline-offset:2px;
+  }
+
+  select{ cursor:pointer; }
+
+  .dynamic-list{ margin-top:.5rem; }
+
+  .dynamic-row{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    margin-bottom:.6rem;
+  }
+
+  .dynamic-row__num{
+    font-family:var(--font-mono);
+    font-size:.8rem;
+    color:var(--ink-soft);
+    width:1.6rem;
+    flex-shrink:0;
+    text-align:right;
+  }
+
+  .dynamic-row input{ flex:1; }
+
+  .dynamic-row__remove{
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    font-size:1.2rem;
+    line-height:1;
+    cursor:pointer;
+    padding:.2rem .3rem;
+    flex-shrink:0;
+  }
+
+  .dynamic-row__remove:hover{ color:var(--error); }
+
+  .add-row-btn{
+    font-family:var(--font-mono);
+    font-size:.75rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    background:transparent;
+    border:1.5px dashed var(--line);
+    color:var(--teal);
+    padding:.5rem 1rem;
+    cursor:pointer;
+    margin-top:.25rem;
+    transition: border-color .15s ease, color .15s ease;
+  }
+
+  .add-row-btn:hover{ border-color:var(--teal); }
+
+  .dropzone{
+    border:1.5px dashed var(--line);
+    padding:2.25rem 1.5rem;
+    text-align:center;
+    cursor:pointer;
+    transition: border-color .15s ease, background-color .15s ease;
+  }
+
+  .dropzone--active{
+    border-color:var(--accent);
+    background:var(--accent-soft);
+  }
+
+  .dropzone strong{ display:block; margin-bottom:.35rem; font-size:.95rem; }
+  .dropzone span{ font-size:.8rem; color:var(--ink-soft); }
+
+  .file-preview{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+    border:1.5px solid var(--line);
+    padding:.85rem 1.1rem;
+    font-size:.9rem;
+  }
+
+  .file-preview button{
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    font-size:1.2rem;
+    line-height:1;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+
+  .file-preview button:hover{ color:var(--error); }
+
+  .submit-section{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-top:3px dashed var(--line);
+    padding:2rem 1.75rem;
+  }
+
+  .submit-section h2{ margin:0 0 .25rem; font-size:1.05rem; }
+
+  .submit-section > .section-hint{
+    color:var(--ink-soft);
+    font-size:.85rem;
+    margin:0 0 1.5rem;
+  }
+
+  .submit-row{
+    display:flex;
+    align-items:flex-end;
+    gap:1.5rem;
+    flex-wrap:wrap;
+  }
+
+  .submit-row .field{ flex:1; min-width:220px; margin-bottom:0; }
+
+  button[type="submit"]{
+    font-family:var(--font-mono);
+    font-size:.85rem;
+    font-weight:600;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    background:var(--accent);
+    color:var(--ink);
+    border:none;
+    padding:.95rem 1.75rem;
+    cursor:pointer;
+    transition: transform .1s ease, box-shadow .1s ease, opacity .15s ease;
+    box-shadow: 2px 3px 0 rgba(33,37,43,.15);
+  }
+
+  button[type="submit"]:hover:not(:disabled){
+    transform: translate(-1px,-1px);
+    box-shadow: 3px 4px 0 rgba(33,37,43,.15);
+  }
+
+  button[type="submit"]:disabled{ opacity:.6; cursor:default; }
+
+  .form-message{
+    margin-top:1.25rem;
+    padding:.85rem 1rem;
+    font-size:.9rem;
+    border-left:3px solid;
+  }
+
+  .form-message--success{
+    border-color:var(--success);
+    background:rgba(63,107,79,.08);
+    color:var(--success);
+  }
+
+  .form-message--error{
+    border-color:var(--error);
+    background:rgba(181,72,47,.08);
+    color:var(--error);
+  }
+
+  footer{
+    margin-top:2.5rem;
+    text-align:center;
+    font-size:.78rem;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width: 680px){
+    .page{ padding:1.5rem .9rem 3rem; }
+    .cover, .form-section, .submit-section{ padding-left:1.1rem; padding-right:1.1rem; }
+    .grid-2, .grid-3{ grid-template-columns:1fr; }
+    .cover__meta h1{ font-size:1.25rem; }
+    .submit-row{ flex-direction:column; align-items:stretch; }
+    button[type="submit"]{ width:100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="cover">
+    <div class="cover__brand">
+      <div class="cover__logo">
+        <img src="LOGO.jpg" alt="Rico o Muertx">
+      </div>
+      <div class="cover__name">Rico o Muertx</div>
+    </div>
+    <div class="cover__meta">
+      <h1>Solicitud de datos para contrato</h1>
+      <p>Completa la información del proyecto y adjunta tu comprobante de domicilio en PDF. Al enviar, recibirás un folio de referencia para dar seguimiento a tu solicitud.</p>
+      <div class="cover__folio">
+        <span class="cover__folio-label">Folio</span>
+        <span class="cover__folio-value" id="folioDisplay">—</span>
+      </div>
+    </div>
+  </header>
+
+  <form id="contractForm" novalidate>
+    <input type="hidden" id="folioInput" name="folio">
+
+    <section class="form-section">
+      <span class="form-section__tab">01 · PR</span>
+      <h2>Información del proyecto</h2>
+      <p class="section-hint">Datos generales del proyecto que dará origen al contrato.</p>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="asunto">Asunto <span class="req">*</span></label>
+          <input type="text" id="asunto" name="asunto" required placeholder="Ej. Contrato de producción - sencillo">
+        </div>
+        <div class="field">
+          <label for="artistaProyecto">Artista / Proyecto <span class="req">*</span></label>
+          <input type="text" id="artistaProyecto" name="artistaProyecto" required placeholder="Nombre del artista o proyecto">
+        </div>
+        <div class="field">
+          <label for="servicio">Servicio <span class="req">*</span></label>
+          <input type="text" id="servicio" name="servicio" required placeholder="Ej. Grabación, mezcla y masterización">
+        </div>
+        <div class="field">
+          <label for="idiomaContrato">Idioma del contrato <span class="req">*</span></label>
+          <select id="idiomaContrato" name="idiomaContrato" required>
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option value="Español">Español</option>
+            <option value="Inglés">Inglés</option>
+            <option value="Bilingüe (Español / Inglés)">Bilingüe (Español / Inglés)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fechaGrabacion">Fecha de grabación <span class="req">*</span></label>
+          <input type="date" id="fechaGrabacion" name="fechaGrabacion" required>
+        </div>
+        <div class="field">
+          <label for="fechaEntrega">Fecha de entrega <span class="req">*</span></label>
+          <input type="date" id="fechaEntrega" name="fechaEntrega" required>
+        </div>
+      </div>
+
+      <div class="field field--full">
+        <label>Tracklist</label>
+        <div class="dynamic-list" id="tracklistContainer">
+          <div class="dynamic-row">
+            <span class="dynamic-row__num">01</span>
+            <input type="text" class="track-input" placeholder="Nombre de la canción">
+            <button type="button" class="dynamic-row__remove" aria-label="Eliminar pista">×</button>
+          </div>
+          <button type="button" class="add-row-btn" data-target="tracklistContainer" data-class="track-input" data-placeholder="Nombre de la canción">+ Agregar pista</button>
+        </div>
+      </div>
+
+      <div class="field field--full">
+        <label>Productor(es)</label>
+        <div class="dynamic-list" id="productoresContainer">
+          <div class="dynamic-row">
+            <span class="dynamic-row__num">01</span>
+            <input type="text" class="productor-input" placeholder="Nombre del productor">
+            <button type="button" class="dynamic-row__remove" aria-label="Eliminar productor">×</button>
+          </div>
+          <button type="button" class="add-row-btn" data-target="productoresContainer" data-class="productor-input" data-placeholder="Nombre del productor">+ Agregar productor</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <span class="form-section__tab">02 · CM</span>
+      <h2>Condiciones comerciales</h2>
+      <p class="section-hint">Términos económicos acordados para este proyecto.</p>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="contraprestacion">Contraprestación <span class="req">*</span></label>
+          <input type="text" id="contraprestacion" name="contraprestacion" required placeholder="Ej. $50,000 MXN + IVA">
+        </div>
+        <div class="field">
+          <label for="regalia">Regalía</label>
+          <input type="text" id="regalia" name="regalia" placeholder="Ej. 5% sobre ventas netas">
+        </div>
+        <div class="field field--full">
+          <label for="condicionesPago">Condiciones de pago <span class="req">*</span></label>
+          <textarea id="condicionesPago" name="condicionesPago" required placeholder="Ej. 50% como anticipo, 50% contra entrega"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <span class="form-section__tab">03 · CP</span>
+      <h2>Datos de la contraparte</h2>
+      <p class="section-hint">Información de la persona o empresa con la que se firma el contrato.</p>
+
+      <div class="grid-3">
+        <div class="field">
+          <label for="contraparte">Contraparte <span class="req">*</span></label>
+          <input type="text" id="contraparte" name="contraparte" required placeholder="Nombre o razón social">
+        </div>
+        <div class="field">
+          <label for="representanteLegal">Representante legal de persona física <span class="req">*</span></label>
+          <input type="text" id="representanteLegal" name="representanteLegal" required placeholder="Nombre completo">
+        </div>
+        <div class="field">
+          <label for="rfc">RFC <span class="req">*</span></label>
+          <input type="text" id="rfc" name="rfc" required placeholder="Ej. XAXX010101000">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field field--full">
+          <label for="domicilio">Domicilio <span class="req">*</span></label>
+          <textarea id="domicilio" name="domicilio" required placeholder="Calle, número, colonia, ciudad, estado, C.P."></textarea>
+        </div>
+        <div class="field field--full">
+          <label for="datosBancarios">Datos bancarios <span class="req">*</span></label>
+          <textarea id="datosBancarios" name="datosBancarios" required placeholder="Banco, titular, número de cuenta y CLABE"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <span class="form-section__tab">04 · DOC</span>
+      <h2>Documentos</h2>
+      <p class="section-hint">Adjunta tu comprobante de domicilio en formato PDF (máximo 10MB).</p>
+
+      <div class="field field--full">
+        <label>Comprobante de domicilio <span class="req">*</span></label>
+        <div class="dropzone" id="dropzone">
+          <strong>Arrastra tu archivo aquí o haz clic para seleccionarlo</strong>
+          <span>Solo se acepta PDF · máximo 10MB</span>
+        </div>
+        <div class="file-preview" id="filePreview" hidden></div>
+        <input type="file" id="fileInput" accept="application/pdf" hidden>
+      </div>
+    </section>
+
+    <section class="submit-section">
+      <h2>Enviar expediente</h2>
+      <p class="section-hint">Te enviaremos confirmación al correo indicado y podrás dar seguimiento con tu folio.</p>
+
+      <div class="submit-row">
+        <div class="field">
+          <label for="correoContacto">Correo electrónico de contacto <span class="req">*</span></label>
+          <input type="email" id="correoContacto" name="correoContacto" required placeholder="tucorreo@ejemplo.com">
+        </div>
+        <button type="submit" id="submitBtn">Enviar expediente</button>
+      </div>
+
+      <div class="form-message" id="formMessage" hidden></div>
+    </section>
+  </form>
+
+  <footer>
+    Rico o Muertx · Este formulario es para uso interno de gestión de contratos
+  </footer>
+
+</div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOEte75YIe-dqn0-sOdfO3LmHF-yoIgYs3l3xYdp-EEhTkUho4qrORzyeZfyQUbYSd/exec';
+
+  function generarFolio(){
+    const now = new Date();
+    const y = String(now.getFullYear()).slice(-2);
+    const m = String(now.getMonth()+1).padStart(2,'0');
+    const d = String(now.getDate()).padStart(2,'0');
+    const rand = Math.random().toString(36).slice(2,6).toUpperCase();
+    return `${y}${m}${d}-${rand}`;
+  }
+
+  let folioActual = generarFolio();
+  const folioDisplay = document.getElementById('folioDisplay');
+  const folioInput = document.getElementById('folioInput');
+  folioDisplay.textContent = folioActual;
+  folioInput.value = folioActual;
+
+  document.querySelectorAll('.add-row-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const container = document.getElementById(btn.dataset.target);
+      const inputClass = btn.dataset.class;
+      const placeholder = btn.dataset.placeholder;
+      const filas = container.querySelectorAll('.dynamic-row').length;
+      const row = document.createElement('div');
+      row.className = 'dynamic-row';
+      row.innerHTML = `
+        <span class="dynamic-row__num">${String(filas+1).padStart(2,'0')}</span>
+        <input type="text" class="${inputClass}" placeholder="${placeholder}">
+        <button type="button" class="dynamic-row__remove" aria-label="Eliminar">×</button>
+      `;
+      container.insertBefore(row, btn);
+    });
+  });
+
+  function renumerar(container){
+    container.querySelectorAll('.dynamic-row').forEach((row, i) => {
+      row.querySelector('.dynamic-row__num').textContent = String(i+1).padStart(2,'0');
+    });
+  }
+
+  document.querySelectorAll('.dynamic-list').forEach(list => {
+    list.addEventListener('click', e => {
+      if (e.target.classList.contains('dynamic-row__remove')){
+        const row = e.target.closest('.dynamic-row');
+        const rows = list.querySelectorAll('.dynamic-row');
+        if (rows.length > 1){ row.remove(); renumerar(list); }
+        else { row.querySelector('input').value = ''; }
+      }
+    });
+  });
+
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const filePreview = document.getElementById('filePreview');
+  let archivoSeleccionado = null;
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dropzone--active'); });
+  dropzone.addEventListener('dragleave', () => { dropzone.classList.remove('dropzone--active'); });
+  dropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropzone.classList.remove('dropzone--active');
+    if (e.dataTransfer.files.length) manejarArchivo(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length) manejarArchivo(fileInput.files[0]);
+  });
+
+  function manejarArchivo(file){
+    if (file.type !== 'application/pdf'){ mostrarMensaje('El archivo debe ser un PDF.', 'error'); return; }
+    if (file.size > 10 * 1024 * 1024){ mostrarMensaje('El archivo no debe superar 10MB.', 'error'); return; }
+    archivoSeleccionado = file;
+    filePreview.innerHTML = `
+      <span>${file.name} · ${(file.size/1024/1024).toFixed(2)} MB</span>
+      <button type="button" id="removeFile" aria-label="Quitar archivo">×</button>
+    `;
+    filePreview.hidden = false;
+    dropzone.hidden = true;
+    document.getElementById('removeFile').addEventListener('click', () => {
+      archivoSeleccionado = null;
+      fileInput.value = '';
+      filePreview.hidden = true;
+      dropzone.hidden = false;
+    });
+  }
+
+  function fileToBase64(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const formMessage = document.getElementById('formMessage');
+  function mostrarMensaje(texto, tipo){
+    formMessage.hidden = false;
+    formMessage.className = `form-message form-message--${tipo}`;
+    formMessage.textContent = texto;
+    formMessage.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  const form = document.getElementById('contractForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()){ form.reportValidity(); return; }
+    if (!archivoSeleccionado){ mostrarMensaje('Por favor adjunta el comprobante de domicilio en PDF.', 'error'); return; }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+    formMessage.hidden = true;
+
+    try{
+      const base64 = await fileToBase64(archivoSeleccionado);
+      const data = {
+        folio: folioActual,
+        asunto: form.asunto.value,
+        artistaProyecto: form.artistaProyecto.value,
+        servicio: form.servicio.value,
+        idiomaContrato: form.idiomaContrato.value,
+        fechaGrabacion: form.fechaGrabacion.value,
+        fechaEntrega: form.fechaEntrega.value,
+        tracklist: Array.from(document.querySelectorAll('.track-input')).map(i => i.value.trim()).filter(Boolean),
+        productores: Array.from(document.querySelectorAll('.productor-input')).map(i => i.value.trim()).filter(Boolean),
+        contraprestacion: form.contraprestacion.value,
+        regalia: form.regalia.value,
+        condicionesPago: form.condicionesPago.value,
+        contraparte: form.contraparte.value,
+        representanteLegal: form.representanteLegal.value,
+        rfc: form.rfc.value,
+        domicilio: form.domicilio.value,
+        datosBancarios: form.datosBancarios.value,
+        correoContacto: form.correoContacto.value,
+        archivo: { nombre: archivoSeleccionado.name, tipo: archivoSeleccionado.type, contenido: base64 }
+      };
+
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'ok'){
+        mostrarMensaje(`Tu solicitud se envió correctamente. Tu folio es ${folioActual}. Guarda este número para dar seguimiento.`, 'success');
+        form.reset();
+        ['tracklistContainer','productoresContainer'].forEach(id => {
+          const container = document.getElementById(id);
+          container.querySelectorAll('.dynamic-row').forEach((row, i) => {
+            if (i === 0){ row.querySelector('input').value = ''; } else { row.remove(); }
+          });
+        });
+        archivoSeleccionado = null;
+        fileInput.value = '';
+        filePreview.hidden = true;
+        dropzone.hidden = false;
+        folioActual = generarFolio();
+        folioDisplay.textContent = folioActual;
+        folioInput.value = folioActual;
+      } else {
+        mostrarMensaje('Hubo un problema al enviar el formulario. Intenta de nuevo.', 'error');
+      }
+    } catch (err){
+      mostrarMensaje('No se pudo conectar con el servidor. Verifica tu conexión e intenta de nuevo.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Enviar expediente';
+    }
+  });
+</script>
+</body>
+</html>
